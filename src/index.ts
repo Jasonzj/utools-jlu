@@ -2,17 +2,22 @@ import DBHelper from './Helper/DBHelper'
 import { getLatestCookies } from './login'
 import { TemplatePlugin } from './types/utools'
 import { featuresFun, featuresList, isNoFeatures } from './features/index'
-import { settingsNameList, generateSettingList, isSettingsNoComplete } from './userInfo'
+import { settingsNameList, generateSettingList, isSettingsNoComplete } from './settings'
+import { initializeLoadingBar, loadingBar } from './loadingBar'
 
 utools.onPluginReady(() => {
+  initializeLoadingBar()
   if (isSettingsNoComplete()) return
   getLatestCookies()
 })
 
 const getList = async (feature: string) => {
   try {
+    loadingBar.go(20)
     await getLatestCookies()
+    loadingBar.go(60)
     const list = await featuresFun[feature]()
+    loadingBar.go(100)
     return list
   } catch (error) {
     utools.showNotification(`获取${feature}失败: ${error.message}`)

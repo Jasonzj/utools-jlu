@@ -1,6 +1,7 @@
 import * as qs from 'qs'
 import { api, customGot } from '../api'
 import { getCookieJar } from '../login'
+import { ElectricityQuery } from '../types/response'
 import { CallbackListItem } from '../types/utools'
 
 const getElectricityCharge = async (): Promise<CallbackListItem[]> => {
@@ -8,8 +9,10 @@ const getElectricityCharge = async (): Promise<CallbackListItem[]> => {
   await customGot(api.electricity, { cookieJar })
 
   const {
-    body: { data },
-  } = await customGot(api.getElectricityData, {
+    body: {
+      data: [{ SYL: charge }],
+    },
+  } = await customGot<ElectricityQuery>(api.getElectricityData, {
     cookieJar,
     method: 'POST',
     responseType: 'json',
@@ -19,7 +22,6 @@ const getElectricityCharge = async (): Promise<CallbackListItem[]> => {
     }),
   })
 
-  const charge = data[0].SYL
   return [
     {
       title: `剩余: ${charge}度电`,

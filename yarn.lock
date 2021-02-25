@@ -1082,6 +1082,11 @@ ms@2.1.2:
   resolved "https://registry.npm.taobao.org/ms/download/ms-2.1.2.tgz?cache=0&sync_timestamp=1607433842694&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fms%2Fdownload%2Fms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha1-0J0fNXtEP0kzgqjrPM0YOHKuYAk=
 
+nanobar@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.npm.taobao.org/nanobar/download/nanobar-0.4.2.tgz#01c512e6c662e38562694f64e4a88a253732f48f"
+  integrity sha1-AcUS5sZi44ViaU9k5KiKJTcy9I8=
+
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/natural-compare/download/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
