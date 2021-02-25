@@ -1,9 +1,9 @@
-import getElectricityCharge from './electricity'
+import getElectricityList from './electricity'
 import { FeaturesType } from '../types/features'
 import { CallbackListItem } from '../types/utools'
 
 const featuresFun: FeaturesType = {
-  electricity: getElectricityCharge,
+  electricity: getElectricityList,
 }
 
 const featuresList: CallbackListItem[] = [

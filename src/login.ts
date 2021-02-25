@@ -2,6 +2,7 @@ import qs from 'qs'
 import { CookieJar } from 'tough-cookie'
 import { customGot, api } from './api'
 import DBHelper from './Helper/DBHelper'
+import { extractInputValueByStr } from './utils'
 
 // const mobileLoginDataTmp = {
 //   appName: 'teach',
@@ -61,9 +62,8 @@ const login = async (): Promise<void> => {
   const password = DBHelper.getValue('password')
 
   const loginPageResponse = await customGot(api.login)
-  const [execution] = loginPageResponse.body.match(
-    /(?<=\<input.*name="execution".*value=\").*?(?=\")/gi,
-  )
+
+  const execution = extractInputValueByStr(loginPageResponse.body, 'execution')
 
   const loginResponse = await customGot(api.login, {
     cookieJar,

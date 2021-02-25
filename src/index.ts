@@ -20,6 +20,7 @@ const getList = async (feature: string) => {
     loadingBar.go(100)
     return list
   } catch (error) {
+    console.log(error)
     utools.showNotification(`获取${feature}失败: ${error.message}`)
   }
 }

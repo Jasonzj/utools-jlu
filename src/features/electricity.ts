@@ -1,33 +1,57 @@
-import * as qs from 'qs'
+import qs from 'qs'
+import { CookieJar } from 'tough-cookie'
 import { api, customGot } from '../api'
 import { getCookieJar } from '../login'
-import { ElectricityQuery } from '../types/response'
+import { Electricity, ElectricityQueryData, ElectricityUsingData } from '../types/response'
 import { CallbackListItem } from '../types/utools'
+import { extractInputValueByStr } from '../utils'
 
-const getElectricityCharge = async (): Promise<CallbackListItem[]> => {
-  const cookieJar = getCookieJar()
-  await customGot(api.electricity, { cookieJar })
-
+const getElectricityData = async <T>(
+  cookieJar: CookieJar,
+  roomdm: string,
+  request_type: string,
+): Promise<T> => {
   const {
-    body: {
-      data: [{ SYL: charge }],
-    },
-  } = await customGot<ElectricityQuery>(api.getElectricityData, {
+    body: { data },
+  } = await customGot<Electricity<T>>(api.getElectricityData, {
     cookieJar,
     method: 'POST',
     responseType: 'json',
     body: qs.stringify({
-      request_type: 'query_type',
-      roomdm: 180235,
+      request_type,
+      roomdm,
+      roomid: '',
+      start_date: '',
+      end_date: '',
     }),
   })
 
-  return [
-    {
-      title: `剩余: ${charge}度电`,
-      description: `剩余: ${charge}度电`,
-    },
-  ]
+  return data
 }
 
-export default getElectricityCharge
+const getElectricityList = async (): Promise<CallbackListItem[]> => {
+  const cookieJar = getCookieJar()
+  const pageResponse = await customGot(api.electricity, { cookieJar })
+  const roomdm = extractInputValueByStr(pageResponse.body, 'roomdm')
+
+  const [[{ SYL: charge }], usingList] = await Promise.all([
+    getElectricityData<ElectricityQueryData[]>(cookieJar, roomdm, 'query_type'),
+    getElectricityData<ElectricityUsingData[]>(cookieJar, roomdm, 'query_using'),
+  ])
+
+  const list = [
+    {
+      title: `剩余: ${charge}度`,
+      description: `剩余: ${charge}度`,
+    },
+  ].concat(
+    usingList.map((item) => ({
+      title: ` 用电量: ${item.zyl} ---- 剩余电量: ${item.zye}`,
+      description: `时间: ${item.accounttime}`,
+    })),
+  )
+
+  return list
+}
+
+export default getElectricityList
