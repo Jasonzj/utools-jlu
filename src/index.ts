@@ -21,6 +21,7 @@ const getList = async (feature: string) => {
     return list
   } catch (error) {
     console.log(error)
+    loadingBar.go(0)
     utools.showNotification(`获取${feature}失败: ${error.message}`)
   }
 }
@@ -44,6 +45,7 @@ const preload: TemplatePlugin = {
 
         const list = await getList(title)
         list && callbackSetList(list)
+        utools.subInputBlur()
       },
       placeholder: 'search',
     },

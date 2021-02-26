@@ -4,10 +4,6 @@ export type Electricity<T> = {
   data: T
 }
 
-export type ElectricityQuery = Electricity<ElectricityQueryData[]>
-
-export type ElectricityUsing = Electricity<ElectricityUsingData[]>
-
 export type ElectricityUsingData = {
   zyl: string
   zye: string
@@ -19,9 +15,34 @@ export type ElectricityQueryData = {
   ['SYLJE']: string
 }
 
-export type ElectricityStatus = Electricity<
-  {
-    datetime: string
-    status: string
+export type ElectricityQuery = Electricity<ElectricityQueryData[]>
+
+export type ElectricityUsing = Electricity<ElectricityUsingData[]>
+
+export type WaterData = {
+  errorMsg: string
+  result: WaterResult
+  resultCode: number
+}
+
+export interface WaterResult {
+  data: {
+    currentUsage: string
+    endTime: string
+    fjbh: string
+    fjh: string
+    id: number
+    lastUsage: string
+    price: string
+    qymc: string
+    rjfy: string
+    ssbh: string
+    sslbh: string
+    startTime: string
+    type: string
+    unitPrice: string
+    usage1: string
+    xh: string
   }[]
->
+  total: number
+}

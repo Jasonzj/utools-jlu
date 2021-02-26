@@ -6,6 +6,9 @@ const api = {
   serialNoLogin: 'https://mucp.jluzh.edu.cn/_ids_mobile/serialNoLogin18_9',
   electricity: 'https://diankong.jluzh.edu.cn/App/index.aspx',
   getElectricityData: 'https://diankong.jluzh.edu.cn/App/DBGetPost.ashx',
+  water:
+    'https://mapp.jluzh.edu.cn/_web/_apps/lightapp/waterCharges/mobile/permit/app/pub/index.jsp',
+  getWaterData: 'https://mapp.jluzh.edu.cn/_web/_lightapp/watermanage/list.rst',
 }
 
 const headers = {

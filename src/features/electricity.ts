@@ -46,7 +46,7 @@ const getElectricityList = async (): Promise<CallbackListItem[]> => {
     },
   ].concat(
     usingList.map((item) => ({
-      title: ` 用电量: ${item.zyl} ---- 剩余电量: ${item.zye}`,
+      title: ` 用电量: ${item.zyl} ----- 剩余电量: ${item.zye}`,
       description: `时间: ${item.accounttime}`,
     })),
   )
