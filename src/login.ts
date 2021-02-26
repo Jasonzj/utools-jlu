@@ -82,7 +82,7 @@ const checkCookieExpired = async (): Promise<boolean> => {
   if (!DBHelper.get('cookieJar')) return true
 
   const cookieJar = getCookieJar()
-  const casCookies = await cookieJar.getCookies('https://authserver.jluzh.edu.cn/cas')
+  const casCookies = await cookieJar.getCookies(api.authServer)
   const CASTGC = casCookies.filter((cookie) => cookie.key === 'CASTGC')[0]
 
   if (!CASTGC) return true

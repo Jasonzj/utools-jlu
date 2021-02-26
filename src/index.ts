@@ -1,9 +1,10 @@
 import DBHelper from './Helper/DBHelper'
-import { getLatestCookies } from './login'
+import { getCookieJar, getLatestCookies } from './login'
 import { TemplatePlugin } from './types/utools'
 import { featuresFun, featuresList, isNoFeatures } from './features/index'
 import { settingsNameList, generateSettingList, isSettingsNoComplete } from './settings'
 import { initializeLoadingBar, loadingBar } from './loadingBar'
+import { api } from './api'
 
 utools.onPluginReady(() => {
   initializeLoadingBar()
@@ -34,14 +35,24 @@ const preload: TemplatePlugin = {
         callbackSetList(featuresList)
       },
       search: (action, searchWord, callbackSetList) => {
-        callbackSetList(featuresList.filter(({ title }) => title.includes(searchWord)))
+        const reg = new RegExp(searchWord, 'gi')
+        callbackSetList(
+          featuresList.filter(
+            ({ title, description }) => title.match(reg) || description.match(reg),
+          ),
+        )
       },
-      select: async (action, { title }, callbackSetList) => {
+      select: async (action, { title, url }, callbackSetList) => {
         if (isSettingsNoComplete()) {
           utools.showNotification('设置不全，请填写所有设置项')
           return
         }
         if (isNoFeatures(title)) return
+        if (url) {
+          const cookie = await getCookieJar().getCookieString(api.authServer)
+          utools.ubrowser.goto(url, { cookie }).run({ width: 1200, height: 800 })
+          return
+        }
 
         const list = await getList(title)
         list && callbackSetList(list)

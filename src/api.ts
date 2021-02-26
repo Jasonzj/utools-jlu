@@ -1,6 +1,7 @@
 import got from 'got'
 
 const api = {
+  authServer: 'https://authserver.jluzh.edu.cn/cas',
   login: 'https://authserver.jluzh.edu.cn/cas/login',
   mobileLogin: 'https://mucp.jluzh.edu.cn/_ids_mobile/login18_9',
   serialNoLogin: 'https://mucp.jluzh.edu.cn/_ids_mobile/serialNoLogin18_9',
