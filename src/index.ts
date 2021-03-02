@@ -76,7 +76,7 @@ const preload: TemplatePlugin = {
           utools.showNotification(`设置${title}成功`)
         }
       },
-      placeholder: 'search',
+      placeholder: 'Please enter username or password, Press enter to set',
     },
   },
 }
