@@ -4,7 +4,7 @@ import { api, customGot } from '../api'
 import { getCookieJar } from '../login'
 import { Electricity, ElectricityQueryData, ElectricityUsingData } from '../types/response'
 import { CallbackListItem } from '../types/utools'
-import { extractInputValueByStr } from '../utils'
+import { extractInputValueByStr } from '../Helper/utils'
 
 const getElectricityData = async <T>(
   cookieJar: CookieJar,
@@ -43,11 +43,13 @@ const getElectricityList = async (): Promise<CallbackListItem[]> => {
     {
       title: `剩余: ${charge}度`,
       description: `剩余: ${charge}度`,
+      icon: 'assets/electricity.png',
     },
   ].concat(
     usingList.map((item) => ({
       title: ` 用电量: ${item.zyl} ----- 剩余电量: ${item.zye}`,
       description: `时间: ${item.accounttime}`,
+      icon: 'assets/electricity.png',
     })),
   )
 

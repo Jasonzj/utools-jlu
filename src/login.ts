@@ -2,7 +2,7 @@ import qs from 'qs'
 import { CookieJar } from 'tough-cookie'
 import { customGot, api } from './api'
 import DBHelper from './Helper/DBHelper'
-import { extractInputValueByStr } from './utils'
+import { extractInputValueByStr } from './Helper/utils'
 
 // const mobileLoginDataTmp = {
 //   appName: 'teach',
