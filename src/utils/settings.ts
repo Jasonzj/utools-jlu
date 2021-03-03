@@ -1,5 +1,5 @@
-import DBHelper from './Helper/DBHelper'
-import { CallbackListItem } from './types/utools'
+import DBHelper from './DBHelper'
+import { CallbackListItem } from '../types/utools'
 
 const settingsNameList = ['username', 'password']
 

@@ -1,5 +1,5 @@
-import { api, customGot } from '../api'
-import { getCookieJar } from '../login'
+import { api, customGot } from '../utils/api'
+import { getCookieJar } from '../utils/login'
 import { WaterData } from '../types/response'
 import { CallbackListItem } from '../types/utools'
 

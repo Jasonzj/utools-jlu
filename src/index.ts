@@ -1,10 +1,10 @@
-import DBHelper from './Helper/DBHelper'
-import { getCookieJar, getLatestCookies } from './login'
+import DBHelper from './utils/DBHelper'
+import { getCookieJar, getLatestCookies } from './utils/login'
 import { TemplatePlugin } from './types/utools'
 import { featuresFun, featuresList, isNoFeatures } from './features/index'
-import { settingsNameList, generateSettingList, isSettingsNoComplete } from './settings'
-import { initializeLoadingBar, loadingBar } from './loadingBar'
-import { api } from './api'
+import { settingsNameList, generateSettingList, isSettingsNoComplete } from './utils/settings'
+import { initializeLoadingBar, loadingBar } from './utils/loadingBar'
+import { api } from './utils/api'
 
 utools.onPluginReady(() => {
   initializeLoadingBar()

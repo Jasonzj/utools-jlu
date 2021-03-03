@@ -1,10 +1,10 @@
 import qs from 'qs'
 import { CookieJar } from 'tough-cookie'
-import { api, customGot } from '../api'
-import { getCookieJar } from '../login'
+import { api, customGot } from '../utils/api'
+import { getCookieJar } from '../utils/login'
 import { Electricity, ElectricityQueryData, ElectricityUsingData } from '../types/response'
 import { CallbackListItem } from '../types/utools'
-import { extractInputValueByStr } from '../Helper/utils'
+import { extractInputValueByStr } from '../utils'
 
 const getElectricityData = async <T>(
   cookieJar: CookieJar,

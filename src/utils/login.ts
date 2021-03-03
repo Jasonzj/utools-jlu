@@ -1,8 +1,8 @@
 import qs from 'qs'
 import { CookieJar } from 'tough-cookie'
 import { customGot, api } from './api'
-import DBHelper from './Helper/DBHelper'
-import { extractInputValueByStr } from './Helper/utils'
+import DBHelper from './DBHelper'
+import { extractInputValueByStr } from '.'
 
 // const mobileLoginDataTmp = {
 //   appName: 'teach',
@@ -75,7 +75,7 @@ const login = async (): Promise<void> => {
     throw new Error('账号或密码错误')
   }
 
-  DBHelper.set({ id: 'cookieJar', value: cookieJar.toJSON() })
+  DBHelper.set({ id: 'cookieJar', value: JSON.stringify(cookieJar.toJSON()) })
 }
 
 const checkCookieExpired = async (): Promise<boolean> => {
@@ -88,6 +88,7 @@ const checkCookieExpired = async (): Promise<boolean> => {
   if (!CASTGC) return true
 
   const expires = new Date(CASTGC.expires)
+
   return Date.now() >= expires.getTime()
 }
 
