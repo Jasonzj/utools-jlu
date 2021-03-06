@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "set NODE_ENV=development && rollup -c -w",
-    "build": "set NODE_ENV=production && rollup -c"
+    "dev": "export NODE_ENV=development && rollup -c -w",
+    "build": "export NODE_ENV=production && rollup -c"
   },
   "dependencies": {
     "got": "^11.8.1",

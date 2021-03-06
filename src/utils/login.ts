@@ -75,7 +75,11 @@ const login = async (): Promise<void> => {
     throw new Error('账号或密码错误')
   }
 
-  DBHelper.set({ id: 'cookieJar', value: JSON.stringify(cookieJar.toJSON()) })
+  const date = new Date()
+  date.setHours(date.getHours() + 4)
+  const cookieJarValue = cookieJar.toJSON()
+  cookieJarValue.cookies.filter(({ key }) => key === 'CASTGC')[0].expires = date
+  DBHelper.set({ id: 'cookieJar', value: JSON.stringify(cookieJarValue) })
 }
 
 const checkCookieExpired = async (): Promise<boolean> => {
@@ -88,6 +92,7 @@ const checkCookieExpired = async (): Promise<boolean> => {
   if (!CASTGC) return true
 
   const expires = new Date(CASTGC.expires)
+  console.log(CASTGC)
 
   return Date.now() >= expires.getTime()
 }
