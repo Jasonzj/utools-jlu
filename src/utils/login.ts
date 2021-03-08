@@ -76,7 +76,7 @@ const login = async (): Promise<void> => {
   }
 
   const date = new Date()
-  date.setHours(date.getHours() + 4)
+  date.setHours(date.getHours() + 3)
   const cookieJarValue = cookieJar.toJSON()
   cookieJarValue.cookies.filter(({ key }) => key === 'CASTGC')[0].expires = date
   DBHelper.set({ id: 'cookieJar', value: JSON.stringify(cookieJarValue) })
@@ -92,7 +92,6 @@ const checkCookieExpired = async (): Promise<boolean> => {
   if (!CASTGC) return true
 
   const expires = new Date(CASTGC.expires)
-  console.log(CASTGC)
 
   return Date.now() >= expires.getTime()
 }
