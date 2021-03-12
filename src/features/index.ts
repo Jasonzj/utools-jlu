@@ -3,11 +3,13 @@ import getWaterList from './water'
 import { getAssignmentList, getAssignmentSubList } from './assignment'
 import { FeaturesType, SubFeaturesType } from '../types/features'
 import { CallbackListItem } from '../types/utools'
+import getScoreList from './scroe'
 
 const featuresFunMap: FeaturesType = {
   electricity: getElectricityList,
   water: getWaterList,
   assignment: getAssignmentList,
+  score: getScoreList,
 }
 
 const subFeaturesFunMap: SubFeaturesType = {
@@ -18,6 +20,7 @@ const featuresList: CallbackListItem[] = [
   { title: 'electricity', description: '查询电费', icon: 'assets/electricity.png' },
   { title: 'water', description: '查询水费', icon: 'assets/water.png' },
   { title: 'assignment', description: '查看作业', icon: 'assets/assignment.png' },
+  { title: 'score', description: '查询成绩', icon: 'assets/scroe.png' },
   {
     title: 'healthCard',
     description: '健康卡填报',

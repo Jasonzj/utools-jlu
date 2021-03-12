@@ -57,6 +57,24 @@ const loginDataTmp = {
 
 // const serialNoLogin = login.bind(null, true)
 
+const loginJw = async (cookieJar: CookieJar, username: string, password: string): Promise<void> => {
+  console.log(username, password)
+  const response = await customGot(api.jwLogin, {
+    cookieJar,
+    method: 'POST',
+    body: qs.stringify({
+      yhm: username,
+      mm: password,
+    }),
+  })
+
+  console.log(response.body)
+
+  if (response.body.includes('用户名或密码不正确，请重新输入')) {
+    throw new Error('jw: 账号或密码错误')
+  }
+}
+
 const loginWlkc = async (
   cookieJar: CookieJar,
   username: string,
@@ -107,6 +125,7 @@ const login = async (): Promise<void> => {
   await Promise.all([
     loginMyJlu(cookieJar, username, password),
     loginWlkc(cookieJar, username, wlkcPassword),
+    loginJw(cookieJar, username, password),
   ])
 
   const date = new Date()
