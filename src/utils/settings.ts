@@ -1,7 +1,7 @@
 import DBHelper from './DBHelper'
 import { CallbackListItem } from '../types/utools'
 
-const settingsNameList = ['username', 'password']
+const settingsNameList = ['username', 'password', 'wlkcPassword']
 
 const isSettingsNoComplete = (): boolean => {
   return !settingsNameList.every((name) => Boolean(DBHelper.get(name)))

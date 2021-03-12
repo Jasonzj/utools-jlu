@@ -1,16 +1,23 @@
 import getElectricityList from './electricity'
 import getWaterList from './water'
-import { FeaturesType } from '../types/features'
+import { getAssignmentList, getAssignmentSubList } from './assignment'
+import { FeaturesType, SubFeaturesType } from '../types/features'
 import { CallbackListItem } from '../types/utools'
 
-const featuresFun: FeaturesType = {
+const featuresFunMap: FeaturesType = {
   electricity: getElectricityList,
   water: getWaterList,
+  assignment: getAssignmentList,
+}
+
+const subFeaturesFunMap: SubFeaturesType = {
+  assignment: getAssignmentSubList,
 }
 
 const featuresList: CallbackListItem[] = [
   { title: 'electricity', description: '查询电费', icon: 'assets/electricity.png' },
   { title: 'water', description: '查询水费', icon: 'assets/water.png' },
+  { title: 'assignment', description: '查看作业', icon: 'assets/assignment.png' },
   {
     title: 'healthCard',
     description: '健康卡填报',
@@ -42,4 +49,4 @@ const featuresList: CallbackListItem[] = [
 const isNoFeatures = (feature: string): boolean =>
   !featuresList.some(({ title }) => title === feature)
 
-export { featuresFun, featuresList, isNoFeatures }
+export { featuresFunMap, subFeaturesFunMap, featuresList, isNoFeatures }

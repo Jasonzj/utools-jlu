@@ -1,4 +1,5 @@
 import qs from 'qs'
+import iconv from 'iconv-lite'
 import { CookieJar } from 'tough-cookie'
 import { customGot, api } from './api'
 import DBHelper from './DBHelper'
@@ -56,11 +57,32 @@ const loginDataTmp = {
 
 // const serialNoLogin = login.bind(null, true)
 
-const login = async (): Promise<void> => {
-  const cookieJar = new CookieJar()
-  const username = DBHelper.getValue('username')
-  const password = DBHelper.getValue('password')
+const loginWlkc = async (
+  cookieJar: CookieJar,
+  username: string,
+  password: string,
+): Promise<void> => {
+  const body = await customGot(api.wlkcLogin, {
+    cookieJar,
+    method: 'POST',
+    body: qs.stringify({
+      IPT_LOGINUSERNAME: username,
+      IPT_LOGINPASSWORD: password,
+    }),
+  }).buffer()
 
+  const content = iconv.decode(body, 'GBK')
+
+  if (content.includes('用户名或密码错误')) {
+    throw new Error('wlkc: 账号或密码错误')
+  }
+}
+
+const loginMyJlu = async (
+  cookieJar: CookieJar,
+  username: string,
+  password: string,
+): Promise<void> => {
   const loginPageResponse = await customGot(api.login)
 
   const execution = extractInputValueByStr(loginPageResponse.body, 'execution')
@@ -72,13 +94,26 @@ const login = async (): Promise<void> => {
   })
 
   if (loginResponse.body.includes('认证信息无效')) {
-    throw new Error('账号或密码错误')
+    throw new Error('myJlu: 账号或密码错误')
   }
+}
+
+const login = async (): Promise<void> => {
+  const cookieJar = new CookieJar()
+  const username = DBHelper.getValue<string>('username')
+  const password = DBHelper.getValue<string>('password')
+  const wlkcPassword = DBHelper.getValue<string>('wlkcPassword')
+
+  await Promise.all([
+    loginMyJlu(cookieJar, username, password),
+    loginWlkc(cookieJar, username, wlkcPassword),
+  ])
 
   const date = new Date()
   date.setHours(date.getHours() + 3)
   const cookieJarValue = cookieJar.toJSON()
   cookieJarValue.cookies.filter(({ key }) => key === 'CASTGC')[0].expires = date
+  console.log(cookieJarValue)
   DBHelper.set({ id: 'cookieJar', value: JSON.stringify(cookieJarValue) })
 }
 

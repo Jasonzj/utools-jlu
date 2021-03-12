@@ -1,7 +1,7 @@
 import DBHelper from './utils/DBHelper'
 import { getCookieJar, getLatestCookies } from './utils/login'
 import { TemplatePlugin } from './types/utools'
-import { featuresFun, featuresList, isNoFeatures } from './features/index'
+import { featuresFunMap, subFeaturesFunMap, featuresList, isNoFeatures } from './features/index'
 import { settingsNameList, generateSettingList, isSettingsNoComplete } from './utils/settings'
 import { initializeLoadingBar, loadingBar } from './utils/loadingBar'
 import { api } from './utils/api'
@@ -12,12 +12,13 @@ utools.onPluginReady(() => {
   getLatestCookies()
 })
 
-const getList = async (feature: string) => {
+const getList = async (feature: string, subArguments: Record<string, unknown> | undefined) => {
   try {
+    const funMap = subArguments ? subFeaturesFunMap : featuresFunMap
     loadingBar.go(20)
-    await getLatestCookies()
+    if (!subArguments) await getLatestCookies()
     loadingBar.go(60)
-    const list = await featuresFun[feature]()
+    const list = await funMap[feature](subArguments)
     loadingBar.go(100)
     return list
   } catch (error) {
@@ -42,19 +43,20 @@ const preload: TemplatePlugin = {
           ),
         )
       },
-      select: async (action, { title, url }, callbackSetList) => {
+      select: async (action, { title, url, feature, subArgument }, callbackSetList) => {
+        feature = feature || title
         if (isSettingsNoComplete()) {
           utools.showNotification('设置不全，请填写所有设置项')
           return
         }
-        if (isNoFeatures(title)) return
+        if (isNoFeatures(feature)) return
         if (url) {
           const cookie = await getCookieJar().getCookieString(api.authServer)
           utools.ubrowser.goto(url, { cookie }).run({ width: 1200, height: 800 })
           return
         }
 
-        const list = await getList(title)
+        const list = await getList(feature, subArgument)
         list && callbackSetList(list)
         utools.subInputBlur()
       },

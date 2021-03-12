@@ -3,7 +3,7 @@ import { getCookieJar } from '../utils/login'
 import { WaterData } from '../types/response'
 import { CallbackListItem } from '../types/utools'
 
-const waterType = ['assets/water_hot.png', 'assets/water.png']
+const waterIconType = ['assets/water_hot.png', 'assets/water.png']
 
 const getWaterList = async (): Promise<CallbackListItem[]> => {
   const cookieJar = getCookieJar()
@@ -16,7 +16,7 @@ const getWaterList = async (): Promise<CallbackListItem[]> => {
     title: `用水量: ${(+water.usage1).toFixed(1)} ----- ¥ ${water.rjfy}`,
     description: `${water.fjbh} ${water.startTime.slice(0, 10)}-${water.endTime.slice(0, 10)}
     ----- 合计:¥ ${water.price}`,
-    icon: `${waterType[+water.type]}`,
+    icon: `${waterIconType[+water.type]}`,
   }))
 }
 
