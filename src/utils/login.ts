@@ -121,11 +121,12 @@ const login = async (): Promise<void> => {
   const username = DBHelper.getValue<string>('username')
   const password = DBHelper.getValue<string>('password')
   const wlkcPassword = DBHelper.getValue<string>('wlkcPassword')
+  const jwPassword = DBHelper.getValue<string>('jwPassword')
 
   await Promise.all([
     loginMyJlu(cookieJar, username, password),
     loginWlkc(cookieJar, username, wlkcPassword),
-    loginJw(cookieJar, username, password),
+    loginJw(cookieJar, username, jwPassword),
   ])
 
   const date = new Date()

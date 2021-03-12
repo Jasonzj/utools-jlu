@@ -3,7 +3,7 @@
  */
 const PluginConfig = {
   pluginName: 'jlu',
-  description: 'jlu',
+  description: '提供我的吉珠信息查询',
   preload: 'preload.js',
   author: 'jasonzj',
   version: '0.0.1',
