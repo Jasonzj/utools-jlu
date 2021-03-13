@@ -17,8 +17,7 @@ const api = {
   switchCourse: 'http://wlkc.jluzh.edu.cn/meol/lesson/enter_course.jsp',
   getAssignmentDetailData:
     'http://wlkc.jluzh.edu.cn/meol/common/hw/student/hwtask.jsp?tagbug=client&strStyle=new03',
-  getScoreData:
-    'http://jw.jluzh.edu.cn/cjcx/cjcx_cxDgXscj.html?doType=query&gnmkdm=N305005&su=04183226',
+  getScoreData: 'http://jw.jluzh.edu.cn/cjcx/cjcx_cxDgXscj.html?doType=query',
 }
 
 const headers = {

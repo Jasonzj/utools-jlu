@@ -58,7 +58,6 @@ const loginDataTmp = {
 // const serialNoLogin = login.bind(null, true)
 
 const loginJw = async (cookieJar: CookieJar, username: string, password: string): Promise<void> => {
-  console.log(username, password)
   const response = await customGot(api.jwLogin, {
     cookieJar,
     method: 'POST',
@@ -67,8 +66,6 @@ const loginJw = async (cookieJar: CookieJar, username: string, password: string)
       mm: password,
     }),
   })
-
-  console.log(response.body)
 
   if (response.body.includes('用户名或密码不正确，请重新输入')) {
     throw new Error('jw: 账号或密码错误')
@@ -133,7 +130,6 @@ const login = async (): Promise<void> => {
   date.setHours(date.getHours() + 3)
   const cookieJarValue = cookieJar.toJSON()
   cookieJarValue.cookies.filter(({ key }) => key === 'CASTGC')[0].expires = date
-  console.log(cookieJarValue)
   DBHelper.set({ id: 'cookieJar', value: JSON.stringify(cookieJarValue) })
 }
 

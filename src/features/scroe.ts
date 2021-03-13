@@ -10,9 +10,9 @@ const getScoreList = async (): Promise<CallbackListItem[]> => {
     cookieJar,
     method: 'POST',
     body: qs.stringify({
-      xnm: '2020',
-      xqm: '3',
-      'queryModel.showCount': 30,
+      xnm: '',
+      xqm: '',
+      'queryModel.showCount': 50,
     }),
   }).json<ScroeData>()
 
