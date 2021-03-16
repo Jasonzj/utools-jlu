@@ -16,21 +16,25 @@ const getAssignmentList = async (): Promise<CallbackListItem[]> => {
 
   if (!isHaveAssignment) return [{ title: '无未提交作业', description: '' }]
 
-  const li = content.match(new RegExp('(?<=<a.*title=".*".*>)(.|\n)*?(?=</li>)', 'gi'))[1]
+  const li = content.match(new RegExp('(?<=<a.*title=".*".*>)(.|\n)*?(?=</ul>)', 'gi'))[1]
   const courses = li.match(new RegExp('(?<=<a.*onclick.*>[^>]*)([^<]+).*?(?=</a)', 'gi'))
   const lids = li.match(new RegExp('(?<=lid=).*?(?=&)', 'gi'))
 
-  return courses.map((item, i) => {
-    return {
-      title: item.trim(),
-      feature: 'assignment',
-      description: '',
-      icon: 'assets/assignment.png',
-      subArgument: {
-        lid: lids[i],
-      },
-    }
-  })
+  return [
+    { title: `有${courses.length}门待提交作业`, description: '', icon: 'assets/assignment.png' },
+  ].concat(
+    courses.map((item, i) => {
+      return {
+        title: item.trim(),
+        feature: 'assignment',
+        description: '',
+        icon: 'assets/assignment.png',
+        subArgument: {
+          lid: lids[i],
+        },
+      }
+    }),
+  )
 }
 
 const getAssignmentSubList = async ({ lid }: { lid: string }): Promise<CallbackListItem[]> => {
