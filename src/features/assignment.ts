@@ -26,9 +26,9 @@ const getAssignmentList = async (): Promise<CallbackListItem[]> => {
     courses.map((item, i) => {
       return {
         title: item.trim(),
-        feature: 'assignment',
         description: '',
         icon: 'assets/assignment.png',
+        feature: 'assignment',
         subArgument: {
           lid: lids[i],
         },
@@ -57,10 +57,14 @@ const getAssignmentSubList = async ({ lid }: { lid: string }): Promise<CallbackL
       const title = item.match(new RegExp('(?<=<a.*class="infolist".*>).*?(?=</a)', 'gi'))[0]
       const info = item.match(new RegExp('(?<=<td.*class="align_c".*>)([^<]+).*?(?=</td>)', 'gi'))
       const isFinished = item.includes('查看结果')
+      const hwtid = item.match(/(?<=hwtid=).*?(?=")/)[0]
+
       return {
         title,
         description: `老师: ${info[2].trim()}, 截止日期: ${info[0].trim()}`,
         icon: assignmentIconType[+isFinished],
+        url: `http://wlkc.jluzh.edu.cn/meol/common/hw/student/write.jsp?hwtid=${hwtid}`,
+        cookieUrl: api.wlkcLogin,
       }
     })
     .filter((item) => item.title)

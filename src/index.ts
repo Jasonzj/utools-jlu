@@ -1,10 +1,10 @@
 import DBHelper from './utils/DBHelper'
-import { getCookieJar, getLatestCookies } from './utils/login'
+import { getLatestCookies } from './utils/login'
 import { TemplatePlugin } from './types/utools'
 import { featuresFunMap, subFeaturesFunMap, featuresList, isNoFeatures } from './features/index'
 import { settingsNameList, generateSettingList, isSettingsNoComplete } from './utils/settings'
 import { initializeLoadingBar, loadingBar } from './utils/loadingBar'
-import { api } from './utils/api'
+import openBrowserByUrl from './features/openBrowserByUrl'
 
 utools.onPluginReady(() => {
   initializeLoadingBar()
@@ -12,13 +12,13 @@ utools.onPluginReady(() => {
   getLatestCookies()
 })
 
-const getList = async (feature: string, subArguments: Record<string, unknown> | undefined) => {
+const getList = async (feature: string, subArgument: Record<string, unknown> | undefined) => {
   try {
-    const funMap = subArguments ? subFeaturesFunMap : featuresFunMap
+    const funMap = subArgument ? subFeaturesFunMap : featuresFunMap
     loadingBar.go(20)
-    if (!subArguments) await getLatestCookies()
+    if (!subArgument) await getLatestCookies()
     loadingBar.go(60)
-    const list = await funMap[feature](subArguments)
+    const list = await funMap[feature](subArgument)
     loadingBar.go(100)
     return list
   } catch (error) {
@@ -43,18 +43,17 @@ const preload: TemplatePlugin = {
           ),
         )
       },
-      select: async (action, { title, url, feature, subArgument }, callbackSetList) => {
+      select: async (action, { title, url, feature, subArgument, cookieUrl }, callbackSetList) => {
         feature = feature || title
         if (isSettingsNoComplete()) {
           utools.showNotification('设置不全，请填写所有设置项')
           return
         }
-        if (isNoFeatures(feature)) return
         if (url) {
-          const cookie = await getCookieJar().getCookieString(api.authServer)
-          utools.ubrowser.goto(url, { cookie }).run({ width: 1200, height: 800 })
+          openBrowserByUrl(url, cookieUrl)
           return
         }
+        if (isNoFeatures(feature)) return
 
         const list = await getList(feature, subArgument)
         list && callbackSetList(list)

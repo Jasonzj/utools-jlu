@@ -86,6 +86,28 @@ const loginWlkc = async (
     }),
   }).buffer()
 
+  const { body: dwrContent } = await customGot(
+    'http://wlkc.jluzh.edu.cn/meol/dwr/call/plaincall/__System.generateId.dwr',
+    {
+      cookieJar,
+      method: 'POST',
+      body: qs.stringify({
+        callCount: 1,
+        'c0-scriptName': '__System',
+        'c0-methodName': 'generateId',
+        'c0-id': 0,
+        batchId: 0,
+        instanceId: 0,
+        page: `%2Fmeol%2Fjpk%2Fcourse%2Flayout%2Fnewpage%2Findex.jsp%3FcourseId%3D`,
+        scriptSessionId: '',
+        windowName: '',
+      }),
+    },
+  )
+
+  const dwr = dwrContent.match(/(?<="0","0",").*?(?=")/gi)[0]
+  cookieJar.setCookie(`DWRSESSIONID=${dwr};`, api.wlkcLogin)
+
   const content = iconv.decode(body, 'GBK')
 
   if (content.includes('用户名或密码错误')) {
