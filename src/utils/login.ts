@@ -58,17 +58,21 @@ const loginDataTmp = {
 // const serialNoLogin = login.bind(null, true)
 
 const loginJw = async (cookieJar: CookieJar, username: string, password: string): Promise<void> => {
-  const response = await customGot(api.jwLogin, {
-    cookieJar,
-    method: 'POST',
-    body: qs.stringify({
-      yhm: username,
-      mm: password,
-    }),
-  })
+  try {
+    const response = await customGot(api.jwLogin, {
+      cookieJar,
+      method: 'POST',
+      body: qs.stringify({
+        yhm: username,
+        mm: password,
+      }),
+    })
 
-  if (response.body.includes('用户名或密码不正确，请重新输入')) {
-    throw new Error('jw: 账号或密码错误')
+    if (response.body.includes('用户名或密码不正确，请重新输入')) {
+      throw new Error('账号或密码错误')
+    }
+  } catch (error) {
+    utools.showNotification(`Jw: ${error.message}`)
   }
 }
 
@@ -77,41 +81,45 @@ const loginWlkc = async (
   username: string,
   password: string,
 ): Promise<void> => {
-  const body = await customGot(api.wlkcLogin, {
-    cookieJar,
-    method: 'POST',
-    body: qs.stringify({
-      IPT_LOGINUSERNAME: username,
-      IPT_LOGINPASSWORD: password,
-    }),
-  }).buffer()
-
-  const { body: dwrContent } = await customGot(
-    'http://wlkc.jluzh.edu.cn/meol/dwr/call/plaincall/__System.generateId.dwr',
-    {
+  try {
+    const body = await customGot(api.wlkcLogin, {
       cookieJar,
       method: 'POST',
       body: qs.stringify({
-        callCount: 1,
-        'c0-scriptName': '__System',
-        'c0-methodName': 'generateId',
-        'c0-id': 0,
-        batchId: 0,
-        instanceId: 0,
-        page: `%2Fmeol%2Fjpk%2Fcourse%2Flayout%2Fnewpage%2Findex.jsp%3FcourseId%3D`,
-        scriptSessionId: '',
-        windowName: '',
+        IPT_LOGINUSERNAME: username,
+        IPT_LOGINPASSWORD: password,
       }),
-    },
-  )
+    }).buffer()
 
-  const dwr = dwrContent.match(/(?<="0","0",").*?(?=")/gi)[0]
-  cookieJar.setCookie(`DWRSESSIONID=${dwr};`, api.wlkcLogin)
+    const { body: dwrContent } = await customGot(
+      'http://wlkc.jluzh.edu.cn/meol/dwr/call/plaincall/__System.generateId.dwr',
+      {
+        cookieJar,
+        method: 'POST',
+        body: qs.stringify({
+          callCount: 1,
+          'c0-scriptName': '__System',
+          'c0-methodName': 'generateId',
+          'c0-id': 0,
+          batchId: 0,
+          instanceId: 0,
+          page: `%2Fmeol%2Fjpk%2Fcourse%2Flayout%2Fnewpage%2Findex.jsp%3FcourseId%3D`,
+          scriptSessionId: '',
+          windowName: '',
+        }),
+      },
+    )
 
-  const content = iconv.decode(body, 'GBK')
+    const dwr = dwrContent.match(/(?<="0","0",").*?(?=")/gi)[0]
+    cookieJar.setCookie(`DWRSESSIONID=${dwr};`, api.wlkcLogin)
 
-  if (content.includes('用户名或密码错误')) {
-    throw new Error('wlkc: 账号或密码错误')
+    const content = iconv.decode(body, 'GBK')
+
+    if (content.includes('用户名或密码错误')) {
+      throw new Error('账号或密码错误')
+    }
+  } catch (error) {
+    utools.showNotification(`Wlkc: ${error.message}`)
   }
 }
 
@@ -120,18 +128,22 @@ const loginMyJlu = async (
   username: string,
   password: string,
 ): Promise<void> => {
-  const loginPageResponse = await customGot(api.login)
+  try {
+    const loginPageResponse = await customGot(api.login)
 
-  const execution = extractInputValueByStr(loginPageResponse.body, 'execution')
+    const execution = extractInputValueByStr(loginPageResponse.body, 'execution')
 
-  const loginResponse = await customGot(api.login, {
-    cookieJar,
-    method: 'POST',
-    body: qs.stringify({ ...loginDataTmp, username, password, execution }),
-  })
+    const loginResponse = await customGot(api.login, {
+      cookieJar,
+      method: 'POST',
+      body: qs.stringify({ ...loginDataTmp, username, password, execution }),
+    })
 
-  if (loginResponse.body.includes('认证信息无效')) {
-    throw new Error('myJlu: 账号或密码错误')
+    if (loginResponse.body.includes('认证信息无效')) {
+      throw new Error('账号或密码错误')
+    }
+  } catch (error) {
+    utools.showNotification(`myJlu: ${error.message}`)
   }
 }
 
@@ -171,18 +183,10 @@ const checkCookieExpired = async (): Promise<boolean> => {
 
 const getLatestCookies = async (): Promise<void> => {
   try {
-    if (DBHelper.getValue('getCookieFlag')) return
-
-    DBHelper.set<boolean>({ id: 'getCookieFlag', value: true })
-
     const isExpired = await checkCookieExpired()
-
     if (isExpired) await login()
-
-    DBHelper.set<boolean>({ id: 'getCookieFlag', value: false })
   } catch (error) {
     utools.showNotification(`获取cookie失败: ${error.message}`)
-    DBHelper.set<boolean>({ id: 'getCookieFlag', value: false })
     throw error
   }
 }

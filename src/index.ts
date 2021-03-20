@@ -8,8 +8,8 @@ import openBrowserByUrl from './features/openBrowserByUrl'
 
 utools.onPluginReady(() => {
   initializeLoadingBar()
-  if (isSettingsNoComplete()) return
-  getLatestCookies()
+  // if (isSettingsNoComplete()) return
+  // getLatestCookies()
 })
 
 const getList = async (feature: string, subArgument: Record<string, unknown> | undefined) => {
